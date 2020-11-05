@@ -1,7 +1,13 @@
 package students;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+@FunctionalInterface
+interface UseThis<E> {
+  void accept(E e);
+}
 
 @FunctionalInterface
 interface Criterion<E> {
@@ -61,9 +67,15 @@ public class School {
 //    }
 //    return res;
 //  }
-  public static <E> void show(List<E> ls) {
+  public static <E> void show(Iterable<E> ls) {
     for (E s : ls) {
         System.out.println("> " + s);
+    }
+  }
+
+  public static <E> void user(Iterable<E> ls, UseThis<E> op) {
+    for (E s : ls) {
+        op.accept(s);
     }
   }
 
@@ -99,6 +111,8 @@ public class School {
     }
     show(getByCriterion(ls, new LongString()));
     System.out.println("----------------------");
+    user(getByCriterion(ls, new LongString()), s -> System.out.println(">>> " + s));
+    System.out.println("----------------------");
     class ShortString implements Criterion<String> {
       @Override
       public boolean test(String s) {
@@ -115,7 +129,17 @@ public class School {
     // doStuff ( (a, b) -> ???
     show(getByCriterion(ls, s -> s.length() < 5 ));
 
-//    Object behavior = s -> s.length() < 5s -> s.length() < 5;
+    Criterion<String> behavior = s -> s.length() < 5;
+    Class<?> cl = behavior.getClass();
+    System.out.println("lambda's class is " + cl.getName());
+    Method[] ma = cl.getMethods();
+    for (Method m : ma) {
+      System.out.println("> " + m);
+    }
+
+//    boolean b = behavior.test("Hello");
+//    boolean b = behavior("Hello");  // NO :(
+
     /*
     If I need to build a criterion of string...
     1) need an object
