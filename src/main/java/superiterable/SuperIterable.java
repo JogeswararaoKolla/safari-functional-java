@@ -33,12 +33,27 @@ public class SuperIterable<E> implements Iterable<E> {
   //  interface Function<E, F> {
 //    F apply(E e);
 //  }
+  // "container with map"
+  // Called a "Functor"
   public <F> SuperIterable<F> map(Function<E, F> op) {
     List<F> res = new ArrayList<>();
 //    for (E s : self) {
 //      res.add(op.apply(s));
 //    }
     self.forEach(e -> res.add(op.apply(e)));
+    return new SuperIterable<>(res);
+  }
+
+  // bucket o'data with a flatMap is called "Monad"
+  public <F> SuperIterable<F> flatMap(Function<E, SuperIterable<F>> op) {
+    List<F> res = new ArrayList<>();
+    for (E s : self) {
+      SuperIterable<F> manyF = op.apply(s);
+      for (F f : manyF) {
+        res.add(f);
+      }
+    }
+//    self.forEach(e -> op.apply(e).forEach(f -> res.add(f)));
     return new SuperIterable<>(res);
   }
 
