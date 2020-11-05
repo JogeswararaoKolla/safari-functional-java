@@ -9,6 +9,9 @@ public final class Student {
   private final List<String> courses;
 
   private Student(String name, int grade, List<String> courses) {
+    if (grade < 0 || grade > 100) {
+      throw new IllegalArgumentException(grade + " is invalid as a percentage");
+    }
     this.name = name;
     this.grade = grade;
     this.courses = List.copyOf(courses);
@@ -35,9 +38,7 @@ public final class Student {
   }
 
   public Student withGrade(int grade) {
-    if (grade < 0 || grade > 100) {
-      throw new IllegalArgumentException(grade + " is invalid as a percentage");
-    }
+
     return new Student(this.name, grade, this.courses);
   }
 
