@@ -45,5 +45,75 @@ public class UseSuperIterable {
     4) Need to change/add to SuperIterable: print courses without duplicates
     5) Print "Name takes course" for all student/course combinations
      */
+    rosterSI
+        .map(s -> s.getName() + " has grade " + s.getGrade())
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .filter(s -> s.getGrade() > 75)
+        .map(s -> s.getName() + " has grade " + s.getGrade())
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .filter(s -> s.getCourses().size() > 2)
+        .flatMap(s -> new SuperIterable<>(s.getCourses()))
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .flatMap(s -> new SuperIterable<>(s.getCourses()))
+        .distinct()
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .flatMap(s -> {
+          return new SuperIterable<>(s.getCourses())
+              .map(c -> s.getName() + " takes course " + c);
+        })
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .flatMap(s -> new SuperIterable<>(s.getCourses()).map(c -> s.getName() + " takes course " + c))
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+
+
+    System.out.println("Using Streams");
+    roster.stream()
+        .map(s -> s.getName() + " has grade " + s.getGrade())
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    roster.stream()
+        .filter(s -> s.getGrade() > 75)
+        .map(s -> s.getName() + " has grade " + s.getGrade())
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    roster.stream()
+        .filter(s -> s.getCourses().size() > 2)
+        .flatMap(s -> s.getCourses().stream())
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    roster.stream()
+        .flatMap(s -> s.getCourses().stream())
+        .distinct()
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    roster.stream()
+        .flatMap(s -> s.getCourses().stream().map(c -> s.getName() + " takes course " + c))
+        .forEach(s -> System.out.println(s));
+    System.out.println("----------------------------");
+    rosterSI
+        .peek(s -> System.out.println("before> " + s))
+        .filter(s -> s.getGrade() > 75)
+        .peek(s -> System.out.println("after> " + s))
+        .forEach(System.out::println);
+
+    System.out.println("----------------------------");
+    roster.stream()
+        .peek(s -> System.out.println("before> " + s))
+        .filter(s -> s.getGrade() > 75)
+        .peek(s -> System.out.println("after> " + s))
+        .forEach(System.out::println);
+//    roster.stream()
+    System.out.println("----------------------------");
   }
 }

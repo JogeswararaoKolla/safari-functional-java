@@ -1,8 +1,6 @@
 package superiterable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -20,6 +18,13 @@ public class SuperIterable<E> implements Iterable<E> {
 //    }
 //  }
 
+  public SuperIterable<E> peek(Consumer<E> op) {
+    for (E e : self) {
+      op.accept(e);
+    }
+    return this;
+  }
+
   public SuperIterable<E> filter(Predicate<E> crit) {
     List<E> res = new ArrayList<>();
     for (E s : self) {
@@ -30,6 +35,16 @@ public class SuperIterable<E> implements Iterable<E> {
     return new SuperIterable<>(res);
   }
 
+  public SuperIterable<E> distinct() {
+    List<E> res = new ArrayList<>();
+    Set<E> seen = new HashSet<>();
+    for (E s : self) {
+      if (seen.add(s)) {
+        res.add(s);
+      }
+    }
+    return new SuperIterable<>(res);
+  }
   //  interface Function<E, F> {
 //    F apply(E e);
 //  }
